@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load filters %}
+{% block content %}
+<div class="container-fluid">
+<form action="" method="post" id="searchForm">
+  {% csrf_token %}
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand" href="#"><i class="fa fa-rebel" aria-hidden="true"></i></div>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+              <li class="counter">{{ search_limit }}  Of {{ result_count }}</li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container">
+       <div class="form-group margin-bottom-sm margin-bottom-lg">
+          <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+             <select name="search_type"  class="form-control" style="margin-bottom: 21px;">
+                  <option value="album">Album</option>
+                  <option value="artist">Artist</option>
+                  <option value="playlist">Playlist</option>
+                  <option value="track">Track</option>
+             </select>
+            </div>
+        </div>
+        <div class="form-group form-group-lg">
+          <div class="col-xs-12 col-sm-8 col-sm-offset-2" >
+            <input class="form-control" type="text" id="formGroupInputLarge" placeholder="Search..." name="search_string">
+            <a class="search-icon" href=""><i class="fa fa-search" aria-hidden="true"></i></a>
+            <p class="error">Please fill out the form.</p>
+          </div>
+        </div>
+    </div>
+</form>
+{% if search_results %}
+  <h3>Your search returned {{ result_count }} result{{ result_count|pluralize }}</h3>
+  <p>(Only {{ search_limit }} values from this count above have been returned.)</p>
+<div class="container">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+        <ul class="results">
+  {% for item in search_results %}
+    <li>
+          {% for image in item.images %}
+            {% if image.height == 64 and image.width == 64 %}
+              <a target="_blank" href="{{ item.external_urls.spotify }}">
+                 <img class="thumb" src="{{image.url}}">
+              </a>
+            {% endif %}
+          {% endfor %}
+          <a target="_blank" href="{{ item.external_urls.spotify }}">
+           {{ item.name }}
+          </a>
+    </li>
+  {% empty %}
+  Sorry, no results found.
+  {% endfor %}
+
+{% endif %}
+    </ul>
+  </div>
+</div>
+
+
+{% if result_count %}
+<ul class="pagination">
+    {% if search_results.has_previous %}
+      <li><a href="?page={{ search_results.previous_page_number }}">previous</a></li>
+    {% endif %}
+    <li class="active">
+      <a>Page {{ search_results.number }} of {{ search_results.paginator.num_pages }}.</a>
+    </li>
+    {% if search_results.has_next %}
+      <li><a href="?page={{ search_results.next_page_number }}">next</a></li>
+    {% endif %}
+</ul>
+{% endif %}
+</div>
+{% endblock %}
