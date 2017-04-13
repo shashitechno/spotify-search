@@ -1,0 +1,7 @@
+# PyCharm internals
+.idea
+
+# Local settings
+settings/local_settings.py
+*.pyc
+*.sqlite3
