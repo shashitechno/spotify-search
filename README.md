@@ -1,5 +1,9 @@
 # Simple Spotify search
 
+## Screenshot
+
+![Spotify Search](screenshot.png?raw=true "Spotify Search")
+
 ## Description
 The following project allows a user to perform a simple search on 
 Spotify information which exposed via its API.  
